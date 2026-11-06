@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuvishka | Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for modern icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Syne & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        hero: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            cyan: '#00F0FF',
+                            neonBlue: '#0070F3',
+                            deepBlue: '#0a0f1d',
+                            accent: '#6366f1',
+                            cardBg: 'rgba(13, 20, 38, 0.65)'
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+                            '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060913;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00F0FF;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(12, 19, 38, 0.6);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+        .glass-panel:hover {
+            border-color: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 15px 35px -5px rgba(0, 240, 255, 0.12);
+        }
+
+        /* Glowing text gradient */
+        .text-gradient {
+            background: linear-gradient(135deg, #FFFFFF 20%, #00F0FF 75%, #3B82F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #00F0FF 0%, #0070F3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Interactive Cursor Trailer */
+        #cursor-glow {
+            pointer-events: none;
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.12) 0%, rgba(99, 102, 241, 0.06) 40%, rgba(0, 0, 0, 0) 70%);
+            transform: translate(-50%, -50%);
+            z-index: 999;
+            transition: width 0.3s, height 0.3s;
+            mix-blend-mode: screen;
+        }
+        #cursor-dot {
+            pointer-events: none;
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00F0FF;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            box-shadow: 0 0 12px #00F0FF;
+        }
+        @media (max-width: 768px) {
+            #cursor-glow, #cursor-dot {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#050811] text-slate-200 font-sans selection:bg-cyan-500 selection:text-black overflow-x-hidden relative">
+
+    <!-- Interactive Cursor Elements -->
+    <div id="cursor-glow"></div>
+    <div id="cursor-dot"></div>
+
+    <!-- Live Interactive Canvas Wallpaper -->
+    <canvas id="interactive-wallpaper" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Ambient background light glows -->
+    <div class="fixed top-[-15%] left-[20%] w-[500px] h-[500px] bg-cyan-600/15 rounded-full blur-[140px] pointer-events-none z-0"></div>
+    <div class="fixed bottom-[-10%] right-[10%] w-[600px] h-[600px] bg-indigo-600/15 rounded-full blur-[160px] pointer-events-none z-0"></div>
+
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-display font-bold text-black text-xl shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+                    T
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-bold text-lg tracking-wider text-white group-hover:text-cyan-400 transition-colors">THUVISHKA</span>
+                    <span class="text-[10px] tracking-widest text-cyan-400 uppercase -mt-1 font-semibold">DASANAYAKA</span>
+                </div>
+            </a>
+
+            <!-- Desktop Links -->
+            <nav class="hidden md:flex items-center gap-1 glass-panel px-6 py-2 rounded-full border border-white/10 shadow-lg">
+                <a href="#about" class="px-4 py-1.5 text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">About</a>
+                <a href="#experience" class="px-4 py-1.5 text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">Experience</a>
+                <a href="#certificates" class="px-4 py-1.5 text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">Certificates</a>
+                <a href="#education" class="px-4 py-1.5 text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">Education</a>
+                <a href="#skills" class="px-4 py-1.5 text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">Skills</a>
+                <a href="#contact" class="px-4 py-1.5 text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">Contact</a>
+            </nav>
+
+            <!-- Quick Action Button & Admin Key -->
+            <div class="hidden sm:flex items-center gap-3">
+                <button onclick="openAdminModal()" class="px-3.5 py-2 rounded-full text-xs font-semibold glass-panel text-slate-300 hover:text-cyan-400 hover:border-cyan-400/50 transition-all flex items-center gap-1.5" title="Admin Portal">
+                    <i class="fa-solid fa-lock text-cyan-400 text-xs"></i> Admin
+                </button>
+                <a href="#contact" class="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-gradient-to-r from-cyan-500 to-blue-600 text-black shadow-lg shadow-cyan-500/25 hover:shadow-cyan-400/50 hover:brightness-110 transition-all">
+                    Let's Connect <i class="fa-solid fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <div class="flex items-center gap-2 md:hidden">
+                <button onclick="openAdminModal()" class="p-2 rounded-lg glass-panel text-cyan-400 text-sm">
+                    <i class="fa-solid fa-lock"></i>
+                </button>
+                <button id="mobile-toggle" aria-label="Toggle Navigation Menu" class="text-white p-2 text-xl focus:outline-none">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel mx-4 mt-2 p-5 rounded-2xl flex flex-col gap-4 border border-white/10">
+            <a href="#about" class="text-sm font-medium hover:text-cyan-400 py-1" onclick="toggleMenu()">About</a>
+            <a href="#experience" class="text-sm font-medium hover:text-cyan-400 py-1" onclick="toggleMenu()">Experience</a>
+            <a href="#certificates" class="text-sm font-medium hover:text-cyan-400 py-1" onclick="toggleMenu()">Certificates</a>
+            <a href="#education" class="text-sm font-medium hover:text-cyan-400 py-1" onclick="toggleMenu()">Education</a>
+            <a href="#skills" class="text-sm font-medium hover:text-cyan-400 py-1" onclick="toggleMenu()">Skills</a>
+            <a href="#contact" class="text-sm font-medium hover:text-cyan-400 py-1" onclick="toggleMenu()">Contact</a>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="relative z-10 pt-28 max-w-7xl mx-auto px-6 space-y-36">
+
+        <!-- HERO SECTION -->
+        <section id="hero" class="min-h-[82vh] flex flex-col-reverse lg:flex-row items-center justify-between gap-12 pt-8">
+            <!-- Left Bio & Info -->
+            <div class="flex-1 text-center lg:text-left space-y-6">
+                <!-- Status Pill -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-cyan-500/30 text-xs font-medium text-cyan-300">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span>Exploring Emerging Tech & Next-Gen Software</span>
+                </div>
+
+                <!-- Headline with Ultra-Bold Futuristic Font -->
+                <h1 class="text-4xl sm:text-6xl xl:text-7xl font-hero font-black tracking-tight leading-[1.08] uppercase">
+                    Hey, I'm <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-300 to-blue-500 drop-shadow-[0_0_35px_rgba(0,240,255,0.4)]">
+                        Thuvishka<br>Dasanayaka
+                    </span>
+                </h1>
+
+                <!-- Dynamic Typing Subtitle -->
+                <div class="text-lg sm:text-2xl font-light text-slate-300 flex items-center justify-center lg:justify-start gap-2 h-10">
+                    <span id="typed-text" class="text-cyan-400 font-semibold border-r-2 border-cyan-400 pr-1 animate-pulse"></span>
+                </div>
+
+                <p class="text-slate-400 max-w-xl mx-auto lg:mx-0 text-base leading-relaxed">
+                    Undergraduate at <strong>UCSC</strong> and Co-Founder / CMO of <strong>OMIXELO</strong>. Driven by curiosity, continuous improvement, and building purposeful digital solutions for the future.
+                </p>
+
+                <!-- Action CTAs -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#contact" class="px-7 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 text-black shadow-xl shadow-cyan-500/25 hover:shadow-cyan-400/40 hover:scale-105 transition-all flex items-center gap-2">
+                        <span>Get In Touch</span>
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </a>
+                    <a href="#experience" class="px-7 py-3.5 rounded-xl font-semibold text-sm glass-panel text-white hover:text-cyan-400 hover:border-cyan-400/40 transition-all flex items-center gap-2">
+                        <span>View Experience</span>
+                        <i class="fa-solid fa-briefcase text-xs text-cyan-400"></i>
+                    </a>
+                </div>
+
+                <!-- Social Links -->
+                <div class="flex items-center justify-center lg:justify-start gap-4 pt-3 text-slate-400 text-lg">
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl glass-panel flex items-center justify-center hover:text-cyan-400 hover:border-cyan-400/50 hover:scale-110 transition-all">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl glass-panel flex items-center justify-center hover:text-cyan-400 hover:border-cyan-400/50 hover:scale-110 transition-all">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="mailto:thuvishka@example.com" class="w-10 h-10 rounded-xl glass-panel flex items-center justify-center hover:text-cyan-400 hover:border-cyan-400/50 hover:scale-110 transition-all">
+                        <i class="fa-solid fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Hero Card / Visual Element -->
+            <div class="flex-1 flex justify-center items-center relative">
+                <div class="relative w-72 sm:w-88 md:w-96 aspect-square group">
+                    <!-- Glow Aura -->
+                    <div class="absolute -inset-2 bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 rounded-3xl blur-2xl opacity-40 group-hover:opacity-75 transition-opacity duration-700 animate-pulse-glow"></div>
+                    
+                    <!-- Main Card with Avatar -->
+                    <div class="relative w-full h-full rounded-3xl glass-panel p-3 border border-white/10 flex flex-col items-center justify-between overflow-hidden shadow-2xl">
+                        <!-- Profile Image placeholder configured with sleek avatar fallback & styles -->
+                        <div class="w-full h-full rounded-2xl overflow-hidden relative bg-[#0b1224] flex items-center justify-center">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Thuvishka Dasanayaka" 
+                                 class="w-full h-full object-cover object-top filter brightness-105 contrast-105 group-hover:scale-105 transition-transform duration-700"
+                                 id="profile-img">
+                            
+                            <!-- Overlay badge -->
+                            <div class="absolute bottom-3 left-3 right-3 p-3 rounded-xl glass-panel border border-white/10 flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-xs font-semibold text-white">Thuvishka Dasanayaka</h4>
+                                    <p class="text-[10px] text-cyan-400">Co-Founder @ OMIXELO</p>
+                                </div>
+                                <span class="px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-bold uppercase tracking-wider border border-cyan-500/30">UCSC '26</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT ME SECTION -->
+        <section id="about" class="scroll-mt-28">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-xs font-bold tracking-widest text-cyan-400 uppercase">My Journey</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-bold mt-2">About Me</h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-indigo-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+                <!-- Main Narrative -->
+                <div class="md:col-span-7 glass-panel p-8 sm:p-10 rounded-3xl flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 text-cyan-400 text-lg font-semibold mb-2">
+                            <i class="fa-solid fa-terminal"></i>
+                            <h3>Curious Mind. Future-Ready Builder.</h3>
+                        </div>
+                        <p class="text-slate-300 text-base leading-relaxed">
+                            Hey, I’m Thuvishka. I’m passionate about technology and fascinated by exploring the constantly evolving world of Information Technology. I take pride in understanding software architecture, coding clean logic, and discovering how emerging technologies can revolutionize everyday experiences.
+                        </p>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            My journey is anchored in curiosity, a commitment to hands-on learning, and turning conceptual ideas into concrete, meaningful solutions. Whether it's guiding young coders, founding digital ventures, or diving into deep computer science concepts, I'm always looking for what's next.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 pt-8 mt-8 border-t border-white/5 text-center">
+                        <div>
+                            <span class="block text-2xl sm:text-3xl font-display font-extrabold text-cyan-400">UCSC</span>
+                            <span class="text-[11px] text-slate-400 font-medium">BSc CS (UG)</span>
+                        </div>
+                        <div>
+                            <span class="block text-2xl sm:text-3xl font-display font-extrabold text-cyan-400">Co-Founder</span>
+                            <span class="text-[11px] text-slate-400 font-medium">OMIXELO</span>
+                        </div>
+                        <div>
+                            <span class="block text-2xl sm:text-3xl font-display font-extrabold text-cyan-400">2.0545</span>
+                            <span class="text-[11px] text-slate-400 font-medium">A/L Z-Score</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Pillars / Highlights -->
+                <div class="md:col-span-5 grid grid-cols-1 gap-4">
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl flex-shrink-0">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Software & Web Development</h4>
+                            <p class="text-xs text-slate-400 mt-1">Deep foundation in OOP, PHP, JavaScript, and building structured web applications.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl flex-shrink-0">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Teaching & Mentorship</h4>
+                            <p class="text-xs text-slate-400 mt-1">Empowering students at DP Education and OMIXELO with practical, real-world coding skills.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl flex-shrink-0">
+                            <i class="fa-solid fa-bullhorn"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Brand Strategy & CMO</h4>
+                            <p class="text-xs text-slate-400 mt-1">Driving strategic brand identity, marketing initiatives, and tech venture growth.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE SECTION -->
+        <section id="experience" class="scroll-mt-28">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-xs font-bold tracking-widest text-cyan-400 uppercase">Work & Leadership</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-bold mt-2">Professional Experience</h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-indigo-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Experience 1: OMIXELO -->
+                <div class="glass-panel p-8 sm:p-10 rounded-3xl relative overflow-hidden border-l-4 border-l-cyan-400">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-[#000a1f] border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-display font-extrabold text-2xl shadow-lg shadow-cyan-500/20">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                    OMIXELO
+                                    <span class="text-xs bg-cyan-500/20 text-cyan-300 font-semibold px-2.5 py-0.5 rounded-full border border-cyan-500/30">Active Venture</span>
+                                </h3>
+                                <p class="text-sm text-cyan-400">Co-Founder & Chief Marketing Officer</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-mono px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-300 self-start md:self-auto">
+                            Sep 2026 - Present
+                        </span>
+                    </div>
+
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                        Building OMIXELO with a bold vision to turn visionary ideas into meaningful digital solutions. Working closely with an inspired team across modern education, software innovation, and strategic outreach.
+                    </p>
+
+                    <!-- Roles Grid within OMIXELO -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5">
+                            <span class="text-xs font-semibold text-cyan-300 block mb-1">Co-Founder</span>
+                            <span class="text-[11px] text-slate-400 font-mono block mb-2">Sep 2026 - Present</span>
+                            <p class="text-xs text-slate-300">Overseeing product architecture, educational initiatives, and future technology roadmaps.</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5">
+                            <span class="text-xs font-semibold text-blue-300 block mb-1">Chief Marketing Officer (CMO)</span>
+                            <span class="text-[11px] text-slate-400 font-mono block mb-2">Oct 2026 - Present</span>
+                            <p class="text-xs text-slate-300">Formulating strategic brand communication, social presence, and growth marketing.</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5">
+                            <span class="text-xs font-semibold text-purple-300 block mb-1">Lead Tutor (PHP)</span>
+                            <span class="text-[11px] text-slate-400 font-mono block mb-2">Sep 2026 - Present</span>
+                            <p class="text-xs text-slate-300">Delivering practical, easy-to-follow lessons covering OOP and backend PHP programming.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience 2: DP Education Coding School -->
+                <div class="glass-panel p-8 sm:p-10 rounded-3xl relative overflow-hidden border-l-4 border-l-blue-500">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-[#00102b] border border-blue-500/40 flex items-center justify-center text-blue-400 font-display font-extrabold text-2xl shadow-lg shadow-blue-500/20">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white">DP Education Coding School</h3>
+                                <p class="text-sm text-blue-400">Teacher & IT Instructor</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-mono px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-300 self-start md:self-auto">
+                            Jul 2026 - Present
+                        </span>
+                    </div>
+
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                        Passionate about making tech accessible. Guiding students through hands-on learning, creative problem solving, and encouraging them to develop concrete digital products with industry-standard paradigms.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs font-semibold text-white">Teacher</span>
+                                <span class="text-[10px] text-cyan-300 font-mono">Aug 2026 - Present</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Mentoring students into confident programmers, instilling problem solving, and building project portfolios.</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs font-semibold text-white">Instructor</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Jul 2026 - Oct 2026</span>
+                            </div>
+                            <p class="text-xs text-slate-400">Taught HTML, CSS, JavaScript, and PHP modules with collaborative assessments and practical labs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CERTIFICATES & CREDENTIALS SECTION -->
+        <section id="certificates" class="scroll-mt-28">
+            <div class="flex flex-col sm:flex-row items-center justify-between mb-12 gap-4">
+                <div class="text-center sm:text-left">
+                    <span class="text-xs font-bold tracking-widest text-cyan-400 uppercase">Credentials & Recognitions</span>
+                    <h2 class="text-3xl sm:text-5xl font-display font-bold mt-2">Certificates</h2>
+                    <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-indigo-500 mt-4 rounded-full mx-auto sm:mx-0"></div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="openAdminModal()" class="px-4 py-2 rounded-xl glass-panel text-xs font-semibold text-cyan-400 hover:border-cyan-400 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle"></i> Add Certificate (Admin)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Certificate Grid -->
+            <div id="certificates-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Injected via JavaScript from Data / localStorage -->
+            </div>
+        </section>
+
+        <!-- EDUCATION SECTION -->
+        <section id="education" class="scroll-mt-28">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-xs font-bold tracking-widest text-cyan-400 uppercase">Academic Background</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-bold mt-2">Education & Honors</h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-indigo-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- UCSC -->
+                <div class="glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl">
+                                <i class="fa-solid fa-university"></i>
+                            </div>
+                            <span class="text-xs font-mono px-3 py-1 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">Jan 2026 - Present</span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">University of Colombo School of Computing (UCSC)</h3>
+                            <p class="text-sm text-cyan-300 mt-1 font-medium">BSc (Hons) in Computer Science (UG)</p>
+                        </div>
+
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Pursuing an advanced degree in Computer Science covering core algorithms, Object-Oriented software engineering, modern systems development, and theoretical computations.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-white/5 flex flex-wrap gap-2">
+                        <span class="px-2.5 py-1 rounded-md text-[11px] bg-white/5 text-slate-300">Data Structures</span>
+                        <span class="px-2.5 py-1 rounded-md text-[11px] bg-white/5 text-slate-300">Software Architecture</span>
+                        <span class="px-2.5 py-1 rounded-md text-[11px] bg-white/5 text-slate-300">AI Fundamentals</span>
+                    </div>
+                </div>
+
+                <!-- D.S. Senanayake College -->
+                <div class="glass-panel p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between group">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <span class="text-xs font-mono px-3 py-1 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">Dec 2025</span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">D. S. Senanayake College</h3>
+                            <p class="text-sm text-indigo-300 mt-1 font-medium">G.C.E. Advanced Level (A/L) - Physical Science</p>
+                        </div>
+
+                        <!-- AL Results Display -->
+                        <div class="bg-black/30 rounded-2xl p-4 border border-white/5 space-y-2">
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-300">Z-Score:</span>
+                                <span class="font-mono font-bold text-cyan-400 text-sm">2.0545</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 pt-2 text-center text-xs">
+                                <div class="bg-white/5 p-2 rounded-lg">
+                                    <span class="text-slate-400 block text-[10px]">Combined Maths</span>
+                                    <span class="font-bold text-emerald-400 text-sm">A</span>
+                                </div>
+                                <div class="bg-white/5 p-2 rounded-lg">
+                                    <span class="text-slate-400 block text-[10px]">ICT</span>
+                                    <span class="font-bold text-emerald-400 text-sm">A</span>
+                                </div>
+                                <div class="bg-white/5 p-2 rounded-lg">
+                                    <span class="text-slate-400 block text-[10px]">Physics</span>
+                                    <span class="font-bold text-sky-400 text-sm">B</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-400 mt-4">
+                        Exceptional analytical foundation in rigorous mathematics and computing fundamentals.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS SECTION -->
+        <section id="skills" class="scroll-mt-28">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-xs font-bold tracking-widest text-cyan-400 uppercase">Capabilities</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-bold mt-2">Skills & Technologies</h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-indigo-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+                <!-- Skill 1 -->
+                <div class="glass-panel p-6 rounded-2xl text-center group hover:scale-105 transition-all duration-300">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 text-2xl mb-4 group-hover:rotate-6 transition-transform">
+                        <i class="fa-brands fa-php"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base">PHP Programming</h4>
+                    <p class="text-[11px] text-slate-400 mt-1">Backend architectures & OOP concepts</p>
+                </div>
+
+                <!-- Skill 2 -->
+                <div class="glass-panel p-6 rounded-2xl text-center group hover:scale-105 transition-all duration-300">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 text-2xl mb-4 group-hover:rotate-6 transition-transform">
+                        <i class="fa-brands fa-js"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base">JavaScript</h4>
+                    <p class="text-[11px] text-slate-400 mt-1">Interactive interfaces & DOM logic</p>
+                </div>
+
+                <!-- Skill 3 -->
+                <div class="glass-panel p-6 rounded-2xl text-center group hover:scale-105 transition-all duration-300">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 text-2xl mb-4 group-hover:rotate-6 transition-transform">
+                        <i class="fa-solid fa-cubes"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base">OOP Principles</h4>
+                    <p class="text-[11px] text-slate-400 mt-1">Modularity, inheritance, patterns</p>
+                </div>
+
+                <!-- Skill 4 -->
+                <div class="glass-panel p-6 rounded-2xl text-center group hover:scale-105 transition-all duration-300">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400 text-2xl mb-4 group-hover:rotate-6 transition-transform">
+                        <i class="fa-brands fa-html5"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base">HTML5 & CSS3</h4>
+                    <p class="text-[11px] text-slate-400 mt-1">Modern layouts & responsive design</p>
+                </div>
+
+                <!-- Skill 5 -->
+                <div class="glass-panel p-6 rounded-2xl text-center group hover:scale-105 transition-all duration-300">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-2xl mb-4 group-hover:rotate-6 transition-transform">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base">Strategic Marketing</h4>
+                    <p class="text-[11px] text-slate-400 mt-1">Brand positioning & growth (CMO)</p>
+                </div>
+
+                <!-- Skill 6 -->
+                <div class="glass-panel p-6 rounded-2xl text-center group hover:scale-105 transition-all duration-300">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl mb-4 group-hover:rotate-6 transition-transform">
+                        <i class="fa-solid fa-chalkboard"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base">IT Tutoring & Mentoring</h4>
+                    <p class="text-[11px] text-slate-400 mt-1">Curriculum & practical student labs</p>
+                </div>
+
+                <!-- Skill 7 -->
+                <div class="glass-panel p-6 rounded-2xl text-center group hover:scale-105 transition-all duration-300">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 text-2xl mb-4 group-hover:rotate-6 transition-transform">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base">AI & Emerging Tech</h4>
+                    <p class="text-[11px] text-slate-400 mt-1">Exploration of futuristic tools</p>
+                </div>
+
+                <!-- Skill 8 -->
+                <div class="glass-panel p-6 rounded-2xl text-center group hover:scale-105 transition-all duration-300">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 text-2xl mb-4 group-hover:rotate-6 transition-transform">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base">Problem Solving</h4>
+                    <p class="text-[11px] text-slate-400 mt-1">Logical, mathematical thinking</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="scroll-mt-28 pb-20">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-xs font-bold tracking-widest text-cyan-400 uppercase">Say Hello</span>
+                <h2 class="text-3xl sm:text-5xl font-display font-bold mt-2">Let's Build Together</h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-indigo-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="max-w-4xl mx-auto glass-panel p-8 sm:p-12 rounded-3xl border border-white/10 relative overflow-hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <!-- Left: Contact Details -->
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-display font-bold text-white">Have a project, idea, or collaboration in mind?</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Feel free to reach out. I’m always open to discussing tech concepts, startup initiatives, tutoring requests, and software partnerships.
+                        </p>
+
+                        <div class="space-y-4 pt-2">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <span class="block text-xs text-slate-400">Direct Email</span>
+                                    <span class="text-sm font-semibold text-slate-200">thuvishka@omixelo.com</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div>
+                                    <span class="block text-xs text-slate-400">Location</span>
+                                    <span class="text-sm font-semibold text-slate-200">Colombo, Sri Lanka</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Glass Form -->
+                    <form onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Your Name</label>
+                            <input type="text" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-400 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Email Address</label>
+                            <input type="email" required placeholder="john@example.com" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-400 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">Message</label>
+                            <textarea rows="4" required placeholder="Tell me about your idea or question..." class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-400 transition-colors"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-400 to-blue-600 text-black shadow-lg shadow-cyan-500/20 hover:shadow-cyan-400/40 hover:brightness-110 transition-all flex items-center justify-center gap-2">
+                            <span>Send Message</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Success Banner Overlay -->
+                <div id="form-success" class="hidden absolute inset-0 bg-[#070d1e]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-4">
+                    <div class="w-16 h-16 rounded-full bg-cyan-400/20 border border-cyan-400 flex items-center justify-center text-cyan-400 text-2xl animate-bounce">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Thank You!</h3>
+                    <p class="text-sm text-slate-300 max-w-sm">Your message has been captured. I will get back to you shortly.</p>
+                    <button onclick="document.getElementById('form-success').classList.add('hidden')" class="px-5 py-2 rounded-xl text-xs font-semibold bg-white/10 text-white hover:bg-white/20 transition-all">
+                        Dismiss
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 relative z-10 py-8 bg-[#04060d]">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <div>
+                © 2026 Thuvishka Dasanayaka. Built with passion & modern tech.
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="#hero" class="hover:text-cyan-400 transition-colors">Back to Top <i class="fa-solid fa-arrow-up ml-1"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LIGHTBOX PREVIEW MODAL -->
+    <div id="lightbox-modal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="relative max-w-4xl w-full glass-panel p-4 rounded-3xl border border-white/10 flex flex-col max-h-[90vh]">
+            <button onclick="closeLightbox()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/70 text-white hover:text-cyan-400 flex items-center justify-center border border-white/10 transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="overflow-hidden rounded-2xl flex-1 flex items-center justify-center bg-black/40">
+                <img id="lightbox-img" src="" alt="Certificate Preview" class="max-h-[68vh] w-auto max-w-full object-contain rounded-xl">
+            </div>
+            <div class="mt-4 px-2">
+                <h3 id="lightbox-title" class="text-lg font-bold text-white"></h3>
+                <p id="lightbox-caption" class="text-xs text-slate-400 mt-1"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN LOGIN & CERTIFICATE MANAGER MODAL -->
+    <div id="admin-modal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="relative max-w-2xl w-full glass-panel p-6 sm:p-8 rounded-3xl border border-cyan-500/30 shadow-2xl max-h-[92vh] overflow-y-auto">
+            <!-- Close Button -->
+            <button onclick="closeAdminModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white flex items-center justify-center border border-white/10 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Admin Authentication Step -->
+            <div id="admin-auth-view" class="space-y-6">
+                <div class="text-center">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-2xl mb-3 shadow-lg shadow-cyan-500/20">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold font-display text-white">Admin Authentication</h3>
+                    <p class="text-xs text-slate-400 mt-1">Enter your password to manage and upload your certificates.</p>
+                </div>
+
+                <form onsubmit="handleAdminLogin(event)" class="space-y-4 max-w-sm mx-auto">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Admin Passcode</label>
+                        <input id="admin-passcode" type="password" required placeholder="Default: admin123" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-400 transition-colors">
+                        <span class="text-[11px] text-cyan-400/80 block mt-1.5">Note: Default password is <code class="bg-white/10 px-1 py-0.5 rounded text-white">admin123</code></span>
+                    </div>
+                    <p id="admin-error" class="hidden text-xs text-rose-400 text-center font-medium">Incorrect password. Please try again.</p>
+                    <button type="submit" class="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-400 to-blue-600 text-black shadow-lg shadow-cyan-500/20 hover:brightness-110 transition-all">
+                        Unlock Admin Dashboard
+                    </button>
+                </form>
+            </div>
+
+            <!-- Admin Dashboard (After Login) -->
+            <div id="admin-dash-view" class="hidden space-y-8">
+                <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-certificate text-cyan-400"></i> Certificate Studio
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Upload new JPG/PNG certificates and manage captions</p>
+                    </div>
+                    <button onclick="adminLogout()" class="text-xs px-3 py-1.5 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 transition-colors">
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Add Certificate Form -->
+                <form id="cert-upload-form" onsubmit="handleCertificateUpload(event)" class="space-y-4 bg-black/40 p-5 rounded-2xl border border-white/5">
+                    <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Add New Certificate</h4>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Certificate Title</label>
+                        <input id="cert-title" type="text" required placeholder="e.g. Sri Lankan Physics Olympiad" class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Issuer / Organization</label>
+                            <input id="cert-issuer" type="text" required placeholder="e.g. Institute of Physics Sri Lanka" class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Issue Date</label>
+                            <input id="cert-date" type="text" placeholder="e.g. 2025 or Oct 2026" class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Text Caption / Description</label>
+                        <textarea id="cert-caption" rows="2" required placeholder="Short caption about this milestone or accomplishment..." class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400"></textarea>
+                    </div>
+
+                    <!-- Direct Image File or URL -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Upload JPG/PNG File</label>
+                            <input id="cert-file" type="file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-cyan-500/20 file:text-cyan-300 hover:file:bg-cyan-500/30 cursor-pointer">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Or Paste Image URL</label>
+                            <input id="cert-url" type="url" placeholder="https://example.com/certificate.jpg" class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-cyan-400">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-2.5 rounded-lg text-xs font-bold bg-cyan-400 hover:bg-cyan-300 text-black transition-all flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Publish to Website
+                    </button>
+                </form>
+
+                <!-- Current Certificates List & Delete actions -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">Live Certificates (<span id="cert-count">0</span>)</h4>
+                    <div id="admin-cert-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Wallpaper Canvas & App JS -->
+    <script>
+        /* -------------------------------------------------------------
+           1. Interactive Particle Constellation Live Wallpaper
+           ------------------------------------------------------------- */
+        const canvas = document.getElementById('interactive-wallpaper');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        const particleCount = 75; // Optimal for smooth 60fps performance
+        const mouse = { x: null, y: null, radius: 160 };
+
+        function initDimensions() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 1;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.baseColor = Math.random() > 0.4 ? 'rgba(0, 240, 255,' : 'rgba(99, 102, 241,';
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off canvas edges
+                if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > height) this.vy = -this.vy;
+
+                // Mouse interaction - particles gently flee and illuminate
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.hypot(dx, dy);
+
+                    if (dist < mouse.radius) {
+                        const angle = Math.atan2(dy, dx);
+                        const force = (mouse.radius - dist) / mouse.radius;
+                        this.x -= Math.cos(angle) * force * 3;
+                        this.y -= Math.sin(angle) * force * 3;
+                    }
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.baseColor + ' 0.8)';
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function connectParticles() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a + 1; b < particles.length; b++) {
+                    const dx = particles[a].x - particles[b].x;
+                    const dy = particles[a].y - particles[b].y;
+                    const dist = Math.hypot(dx, dy);
+
+                    if (dist < 130) {
+                        const opacity = 1 - (dist / 130);
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${opacity * 0.22})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+
+                // Connect to mouse cursor
+                if (mouse.x !== null && mouse.y !== null) {
+                    const mdx = particles[a].x - mouse.x;
+                    const mdy = particles[a].y - mouse.y;
+                    const mdist = Math.hypot(mdx, mdy);
+                    if (mdist < 140) {
+                        const mOpacity = 1 - (mdist / 140);
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${mOpacity * 0.4})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateWallpaper() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            connectParticles();
+            requestAnimationFrame(animateWallpaper);
+        }
+
+        window.addEventListener('resize', () => {
+            initDimensions();
+            createParticles();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        /* -------------------------------------------------------------
+           2. Cursor Glow Follower Effect
+           ------------------------------------------------------------- */
+        const cursorGlow = document.getElementById('cursor-glow');
+        const cursorDot = document.getElementById('cursor-dot');
+        let curX = window.innerWidth / 2;
+        let curY = window.innerHeight / 2;
+        let tgX = curX, tgY = curY;
+
+        window.addEventListener('mousemove', (e) => {
+            tgX = e.clientX;
+            tgY = e.clientY;
+            if (cursorDot) {
+                cursorDot.style.left = tgX + 'px';
+                cursorDot.style.top = tgY + 'px';
+            }
+        });
+
+        function renderCursor() {
+            curX += (tgX - curX) * 0.12;
+            curY += (tgY - curY) * 0.12;
+            if (cursorGlow) {
+                cursorGlow.style.left = curX + 'px';
+                cursorGlow.style.top = curY + 'px';
+            }
+            requestAnimationFrame(renderCursor);
+        }
+        renderCursor();
+
+        /* -------------------------------------------------------------
+           3. Typing Effect for Hero Subtitle
+           ------------------------------------------------------------- */
+        const phrases = [
+            "BSc in Computer Science (UG) at UCSC",
+            "Co-Founder & CMO of OMIXELO",
+            "Software & PHP Programmer",
+            "Tech Educator & Mentor",
+            "Passionate AI & Emerging Tech Explorer"
+        ];
+        let pIndex = 0;
+        let cIndex = 0;
+        let isDeleting = false;
+        const typedTarget = document.getElementById('typed-text');
+
+        function typeLoop() {
+            const current = phrases[pIndex];
+            if (isDeleting) {
+                typedTarget.textContent = current.substring(0, cIndex - 1);
+                cIndex--;
+            } else {
+                typedTarget.textContent = current.substring(0, cIndex + 1);
+                cIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 30 : 65;
+
+            if (!isDeleting && cIndex === current.length) {
+                typeSpeed = 1800; // Pause at end of text
+                isDeleting = true;
+            } else if (isDeleting && cIndex === 0) {
+                isDeleting = false;
+                pIndex = (pIndex + 1) % phrases.length;
+                typeSpeed = 400;
+            }
+
+            setTimeout(typeLoop, typeSpeed);
+        }
+
+        /* -------------------------------------------------------------
+           4. Mobile Navbar & Form Feedback Handlers
+           ------------------------------------------------------------- */
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('hidden');
+        }
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', toggleMenu);
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const successEl = document.getElementById('form-success');
+            if (successEl) {
+                successEl.classList.remove('hidden');
+            }
+            e.target.reset();
+        }
+
+        /* -------------------------------------------------------------
+           5. Certificate Management & Admin Logic
+           ------------------------------------------------------------- */
+        const defaultCertificates = [
+            {
+                id: 'cert-1',
+                title: 'Sri Lankan Physics Olympiad Competition',
+                issuer: 'Institute of Physics Sri Lanka',
+                date: '2025',
+                caption: 'Honored with certificate of participation and high performance in theoretical physics problem solving.',
+                imageUrl: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'cert-2',
+                title: 'Full Stack Web Development & PHP Masterclass',
+                issuer: 'UCSC Tech Collective',
+                date: '2026',
+                caption: 'In-depth specialization covering Object-Oriented PHP, database relational schemas, and asynchronous client architecture.',
+                imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'cert-3',
+                title: 'Coding Instructor & Mentorship Excellence',
+                issuer: 'DP Education Coding School',
+                date: '2026',
+                caption: 'Recognized for teaching fundamental computer science and guiding hundreds of aspiring young developers through practical coding labs.',
+                imageUrl: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80'
+            }
+        ];
+
+        function getCertificates() {
+            const stored = localStorage.getItem('thuvishka_certificates');
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch(e) {
+                    return defaultCertificates;
+                }
+            }
+            localStorage.setItem('thuvishka_certificates', JSON.stringify(defaultCertificates));
+            return defaultCertificates;
+        }
+
+        function saveCertificates(certs) {
+            localStorage.setItem('thuvishka_certificates', JSON.stringify(certs));
+            renderCertificates();
+            renderAdminCertList();
+        }
+
+        function renderCertificates() {
+            const certs = getCertificates();
+            const container = document.getElementById('certificates-container');
+            if (!container) return;
+
+            if (certs.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 glass-panel rounded-2xl">
+                        <i class="fa-solid fa-file-circle-question text-3xl text-slate-500 mb-2"></i>
+                        <p class="text-sm text-slate-400">No certificates added yet. Use the Admin Portal to upload your first certificate!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = certs.map((c, i) => `
+                <div class="glass-panel rounded-3xl overflow-hidden flex flex-col justify-between group hover:-translate-y-1 transition-all duration-300 border border-white/10 hover:border-cyan-400/50">
+                    <div class="relative h-48 w-full bg-slate-900/60 overflow-hidden cursor-pointer" onclick="openLightbox('${c.id}')">
+                        <img src="${c.imageUrl}" alt="${c.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f1d] via-transparent to-transparent"></div>
+                        <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold bg-black/60 text-cyan-300 border border-cyan-500/30">
+                            ${c.date || 'Verified'}
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 backdrop-blur-xs transition-opacity">
+                            <span class="px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-400 text-black flex items-center gap-1.5 shadow-lg">
+                                <i class="fa-solid fa-expand"></i> Preview
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <span class="text-[11px] font-medium text-cyan-400 tracking-wider uppercase block mb-1">${c.issuer}</span>
+                            <h3 class="text-base font-bold text-white leading-snug group-hover:text-cyan-300 transition-colors">${c.title}</h3>
+                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">${c.caption}</p>
+                        </div>
+                        <button onclick="openLightbox('${c.id}')" class="w-full py-2 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/5 transition-colors flex items-center justify-center gap-2">
+                            <span>View Full Certificate</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* -------------------------------------------------------------
+           6. Lightbox Viewer Logic
+           ------------------------------------------------------------- */
+        function openLightbox(certId) {
+            const certs = getCertificates();
+            const cert = certs.find(c => c.id === certId);
+            if (!cert) return;
+
+            document.getElementById('lightbox-img').src = cert.imageUrl;
+            document.getElementById('lightbox-title').textContent = cert.title + " (" + cert.issuer + ")";
+            document.getElementById('lightbox-caption').textContent = cert.caption;
+            document.getElementById('lightbox-modal').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox-modal').classList.add('hidden');
+        }
+
+        /* -------------------------------------------------------------
+           7. Admin Portal Authentication & Actions
+           ------------------------------------------------------------- */
+        let isAdminLoggedIn = false;
+
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            if (isAdminLoggedIn) {
+                document.getElementById('admin-auth-view').classList.add('hidden');
+                document.getElementById('admin-dash-view').classList.remove('hidden');
+                renderAdminCertList();
+            } else {
+                document.getElementById('admin-auth-view').classList.remove('hidden');
+                document.getElementById('admin-dash-view').classList.add('hidden');
+                document.getElementById('admin-passcode').value = '';
+                document.getElementById('admin-error').classList.add('hidden');
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('admin-passcode').value;
+            // Admin password (can easily be modified or configured)
+            if (pass === 'admin123' || pass === 'thuvishka2026') {
+                isAdminLoggedIn = true;
+                document.getElementById('admin-auth-view').classList.add('hidden');
+                document.getElementById('admin-dash-view').classList.remove('hidden');
+                renderAdminCertList();
+            } else {
+                document.getElementById('admin-error').classList.remove('hidden');
+            }
+        }
+
+        function adminLogout() {
+            isAdminLoggedIn = false;
+            document.getElementById('admin-dash-view').classList.add('hidden');
+            document.getElementById('admin-auth-view').classList.remove('hidden');
+            document.getElementById('admin-passcode').value = '';
+        }
+
+        function renderAdminCertList() {
+            const certs = getCertificates();
+            const listEl = document.getElementById('admin-cert-list');
+            const countEl = document.getElementById('cert-count');
+            if (countEl) countEl.textContent = certs.length;
+
+            if (!listEl) return;
+            if (certs.length === 0) {
+                listEl.innerHTML = '<p class="text-xs text-slate-500 py-2">No certificates currently in store.</p>';
+                return;
+            }
+
+            listEl.innerHTML = certs.map(c => `
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04] border border-white/5 text-xs">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <img src="${c.imageUrl}" class="w-10 h-10 object-cover rounded-lg border border-white/10 flex-shrink-0">
+                        <div class="truncate">
+                            <span class="font-bold text-white block truncate">${c.title}</span>
+                            <span class="text-[10px] text-cyan-400 block">${c.issuer} &bull; ${c.date || ''}</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteCertificate('${c.id}')" class="text-xs text-rose-400 hover:text-rose-300 p-2 ml-2 hover:bg-rose-500/10 rounded-lg transition-colors" title="Delete Certificate">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deleteCertificate(id) {
+            let certs = getCertificates();
+            certs = certs.filter(c => c.id !== id);
+            saveCertificates(certs);
+        }
+
+        function handleCertificateUpload(e) {
+            e.preventDefault();
+            const title = document.getElementById('cert-title').value.trim();
+            const issuer = document.getElementById('cert-issuer').value.trim();
+            const date = document.getElementById('cert-date').value.trim();
+            const caption = document.getElementById('cert-caption').value.trim();
+            const fileInput = document.getElementById('cert-file');
+            const urlInput = document.getElementById('cert-url').value.trim();
+
+            const createRecord = (imgSrc) => {
+                const newCert = {
+                    id: 'cert-' + Date.now(),
+                    title,
+                    issuer,
+                    date,
+                    caption,
+                    imageUrl: imgSrc
+                };
+                const certs = getCertificates();
+                certs.unshift(newCert);
+                saveCertificates(certs);
+                document.getElementById('cert-upload-form').reset();
+            };
+
+            // If a local image file is chosen, convert to base64 DataURL
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    createRecord(evt.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else if (urlInput) {
+                createRecord(urlInput);
+            } else {
+                // Fallback demo certificate background
+                createRecord('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80');
+            }
+        }
+
+        // Initialize Everything on Load
+        window.onload = function() {
+            initDimensions();
+            createParticles();
+            animateWallpaper();
+            typeLoop();
+            renderCertificates();
+        };
+    </script>
+</body>
+</html>
